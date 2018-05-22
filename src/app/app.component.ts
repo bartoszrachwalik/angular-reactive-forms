@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Observable} from 'rxjs/Observable';
+import {CustomValidators} from './custom-validators';
 
 @Component({
   selector: 'app-root',
@@ -11,6 +12,8 @@ export class AppComponent implements OnInit {
   genders = ['male', 'female'];
   signupForm: FormGroup;
   forbiddenUsernames = ['Chris', 'Anna'];
+
+  projectForm: FormGroup;
 
   ngOnInit() {
     this.signupForm = new FormGroup({
@@ -28,26 +31,40 @@ export class AppComponent implements OnInit {
     //  this.signupForm.statusChanges.subscribe(
     //    (value) => console.log(value)
     //  );
-    this.signupForm.setValue({
-        'userData': {
-          'username': 'Max',
-          'email': 'max@test.com'
-        },
-        'gender': 'male',
-        'hobbies': []
-      }
-    );
-    this.signupForm.patchValue({
-        'userData': {
-          'username': 'Anna',
-        }
-      }
-    );
+    // this.signupForm.setValue({
+    //     'userData': {
+    //       'username': 'Max',
+    //       'email': 'max@test.com'
+    //     },
+    //     'gender': 'male',
+    //     'hobbies': []
+    //   }
+    // );
+    // this.signupForm.patchValue({
+    //     'userData': {
+    //       'username': 'Anna',
+    //     }
+    //   }
+    // );
+    this.projectForm = new FormGroup({
+      'projectName': new FormControl(
+        null,
+        [Validators.required, CustomValidators.invalidProjectName],
+        CustomValidators.asyncInvalidProjectName
+      ),
+      'email': new FormControl(null, [Validators.required, Validators.email]),
+      'projectStatus': new FormControl('critical')
+    });
   }
+
+  onSaveProject() {
+    console.log(this.projectForm.value);
+  }
+
 
   onSubmit() {
     console.log(this.signupForm);
-    this.signupForm.reset();
+    // this.signupForm.reset();
   }
 
   onAddHobby() {
